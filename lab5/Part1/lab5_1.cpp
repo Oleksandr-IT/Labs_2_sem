@@ -22,9 +22,7 @@ public:
     }
 
     friend istream& operator>>(istream& in, Student& s) {
-        if (!(in >> s.name >> s.age >> s.avgMark)) {
-            throw runtime_error("Помилка зчитування!");
-        }
+        in >> s.name >> s.age >> s.avgMark;
         return in;
     }
 
