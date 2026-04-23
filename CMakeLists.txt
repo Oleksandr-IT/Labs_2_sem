@@ -19,4 +19,8 @@ add_executable(Labs_2_sem
         lab5/Part2/lab5_2.cpp
         lab5/Part2/lab5_3.cpp
         lab5/Part2/lab5_4.cpp
+        lab6/lab6_1.cpp
+        lab6/lab6_2.cpp
+        lab6/lab6_3.cpp
+        lab7/main.cpp
 )
