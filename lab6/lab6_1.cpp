@@ -1,115 +1,117 @@
 #include <iostream>
+#include <windows.h>
 
 using namespace std;
 
-class A {
+class Base {
+protected:
+    int dat;
 public:
-    int a;
-    A() { cout << "A ctor\n"; }
-    ~A() { cout << "A dtor\n"; }
+    Base() : dat(1) {}
+    Base(int d) : dat(d) {}
 };
 
-class B {
+/*class D1 : protected Base {
+protected:
+    int d1;
 public:
-    int b;
-    B() { cout << "B ctor\n"; }
-    ~B() { cout << "B dtor\n"; }
+    D1() : d1(1) {}
+    D1(int d, int dt) : Base(dt), d1(d) {}
 };
 
-class C : public A, public B {
+class D2 : protected Base {
+protected:
+    double d2;
 public:
-    int c;
-    C() { cout << "C ctor\n"; }
-    ~C() { cout << "C dtor\n"; }
+    D2() : d2(1) {}
+    D2(int d, double dt) : Base(d), d2(dt) {}
 };
 
-class D : public C {
+class D12 : protected D1, protected D2 {
+protected:
+    double dt;
 public:
-    int d;
-    D() { cout << "D ctor\n"; }
-    ~D() { cout << "D dtor\n"; }
+    D12() : dt(1) {}
+    D12(int a, int b, int c, double d, int e) : D1(a, b), D2(c, d), dt(e) {}
 };
 
-class E : public B {
+class R : protected D12, protected Base {
+protected:
+    double dt;
 public:
-    int e;
-    E() { cout << "E ctor\n"; }
-    ~E() { cout << "E dtor\n"; }
+    R() : dt(1) {}
+    R(int a, int b, int c, double d, int e) : D12(a, b, c, d, e), Base(a), dt(e + 1.0) {}
+
+    void showDat() {
+        cout << "\nНевіртуальні з'єднання класу R:" << endl;
+        cout << "D12::D1::Base::dat = " << D12::D1::Base::dat << endl;
+        cout << "Direct Base::dat   = " << Base::dat << endl;
+        cout << "D12::D2::Base::dat = " << D12::D2::Base::dat << endl;
+    }
+};*/
+
+//Ієрархія з віртуальним успадкуванням
+class D1V : virtual protected Base {
+protected:
+    int d1;
+public:
+    D1V() : d1(1) {}
+    D1V(int d, int dt) : Base(dt), d1(d) {}
 };
 
-class F : public C {
+class D2V : virtual protected Base {
+protected:
+    double d2;
 public:
-    int f;
-    F() { cout << "F ctor\n"; }
-    ~F() { cout << "F dtor\n"; }
+    D2V() : d2(1) {}
+    D2V(int d, double dt) : Base(d), d2(dt) {}
 };
 
-class Av {
+class D12V : virtual protected D1V, virtual protected D2V {
+protected:
+    double dt;
 public:
-    int a;
-    Av() { cout << "Av ctor\n"; }
-    virtual ~Av() { cout << "Av dtor\n"; }
+    D12V() : dt(1) {}
+    D12V(int a, int b, int c, double d, int e) : D1V(a, b), D2V(c, d), dt(e) {}
 };
 
-class Bv {
+class RV : virtual protected D12V, virtual protected Base {
+protected:
+    double dt;
 public:
-    int b;
-    Bv() { cout << "Bv ctor\n"; }
-    virtual ~Bv() { cout << "Bv dtor\n"; }
-};
+    RV() : dt(1) {}
+    RV(int a, int b, int c, double d, int e) : Base(a + 1), D12V(a, b, c, d, e), dt(e + 1.0) {}
 
-class Cv : virtual public Av, virtual public Bv {
-public:
-    int c;
-    Cv() { cout << "Cv ctor\n"; }
-    ~Cv() { cout << "Cv dtor\n"; }
-};
-
-class Dv : public Cv {
-public:
-    int d;
-    Dv() { cout << "Dv ctor\n"; }
-    ~Dv() { cout << "Dv dtor\n"; }
-};
-
-class Ev : virtual public Bv {
-public:
-    int e;
-    Ev() { cout << "Ev ctor\n"; }
-    ~Ev() { cout << "Ev dtor\n"; }
-};
-
-class Fv : public Cv {
-public:
-    int f;
-    Fv() { cout << "Fv ctor\n"; }
-    ~Fv() { cout << "Fv dtor\n"; }
+    void showDat() {
+        cout << "\nВіртуальні з'єднання класу RV:" << endl;
+        cout << "Напряму dat (немає неоднозначності) = " << dat << endl;
+        cout << "D12V::D1V::Base::dat      = " << D12V::D1V::Base::dat << endl;
+        cout << "Base::dat                 = " << Base::dat << endl;
+    }
 };
 
 int main() {
-    cout << "\n--- WITHOUT VIRTUAL ---\n";
-    F f1;
-    D d1;
-    E e1;
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
 
-    cout << "Size A: " << sizeof(A) << endl;
-    cout << "Size B: " << sizeof(B) << endl;
-    cout << "Size C: " << sizeof(C) << endl;
-    cout << "Size D: " << sizeof(D) << endl;
-    cout << "Size E: " << sizeof(E) << endl;
-    cout << "Size F: " << sizeof(F) << endl;
+    //R a, b(1, 2, 3, 4.5, 5);
+    RV av, bv(1, 2, 3, 4.5, 5);
 
-    cout << "\n--- WITH VIRTUAL ---\n";
-    Fv f2;
-    Dv d2;
-    Ev e2;
+    /*cout << "--- Розміри невіртуальних класів ---" << endl;
+    cout << "Розмір Base: " << sizeof(Base) << endl;
+    cout << "Розмір D1:   " << sizeof(D1) << endl;
+    cout << "Розмір D2:   " << sizeof(D2) << endl;
+    cout << "Розмір D12:  " << sizeof(D12) << endl;
+    cout << "Розмір R:    " << sizeof(R) << " (об'єкт b: " << sizeof(b) << ")" << endl;*/
 
-    cout << "Size Av: " << sizeof(Av) << endl;
-    cout << "Size Bv: " << sizeof(Bv) << endl;
-    cout << "Size Cv: " << sizeof(Cv) << endl;
-    cout << "Size Dv: " << sizeof(Dv) << endl;
-    cout << "Size Ev: " << sizeof(Ev) << endl;
-    cout << "Size Fv: " << sizeof(Fv) << endl;
+    cout << "\n--- Розміри віртуальних класів ---" << endl;
+    cout << "Розмір D1V:  " << sizeof(D1V) << endl;
+    cout << "Розмір D2V:  " << sizeof(D2V) << endl;
+    cout << "Розмір D12V: " << sizeof(D12V) << endl;
+    cout << "Розмір RV:   " << sizeof(RV) << " (об'єкт bv: " << sizeof(bv) << ")" << endl;
+
+    //b.showDat();
+    bv.showDat();
 
     return 0;
 }

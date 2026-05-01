@@ -75,7 +75,7 @@ int main() {
 
     WomanEmployee w("Наталія", 21, 15000);
 
-    cout << "\n--- Info ---\n";
+    cout << "\n--- Інформація ---\n";
     w.show();
 
     return 0;

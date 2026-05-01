@@ -1,15 +1,14 @@
 #include <iostream>
 #include <cmath>
+
 using namespace std;
 
-// 🔷 Абстрактний клас
 class Figure {
 public:
-    virtual double perimeter() const = 0; // чисто віртуальна
+    virtual double perimeter() const = 0;
     virtual ~Figure() {} // віртуальний деструктор
 };
 
-// 🔶 Прямокутник
 class Rectangle : public Figure {
 private:
     double a, b;
@@ -21,7 +20,6 @@ public:
     }
 };
 
-// 🔶 Коло
 class Circle : public Figure {
 private:
     double r;
@@ -33,7 +31,6 @@ public:
     }
 };
 
-// 🔶 Прямокутний трикутник
 class RightTriangle : public Figure {
 private:
     double a, b;
@@ -46,10 +43,9 @@ public:
     }
 };
 
-// 🔶 Трапеція
 class Trapezoid : public Figure {
 private:
-    double a, b, c, d; // всі сторони
+    double a, b, c, d;
 public:
     Trapezoid(double a, double b, double c, double d)
         : a(a), b(b), c(c), d(d) {}
